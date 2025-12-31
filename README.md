@@ -1,0 +1,2 @@
+# cockpit-jupyter-llm
+server
