@@ -1,0 +1,39 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Project Secrets & Config
+config/secrets.yaml
+config/config.yaml
+.env
+
+# Logs & Persistence
+logs/
+memory_db/
+vector_store/
+system_memory.json
+*.log
+
+# Large Files & Models
+models/
+*.gguf
+*.bin
+
+# Voice/Audio Outputs
+*.wav
+*.mp3
+
+# Jupyter
+.ipynb_checkpoints
+notebooks/LLM-Notebooks/
+
+# IDE
+.vscode/
+.idea/

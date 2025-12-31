@@ -1,0 +1,35 @@
+# Cockpit-Jupyter-LLM-VPS Configuration Template
+# Copy this file to config.yaml and fill in your credentials
+
+twilio:
+  account_sid: "YOUR_TWILIO_ACCOUNT_SID"
+  auth_token: "YOUR_TWILIO_AUTH_TOKEN"
+  phone_number: "+1234567890" # Your Twilio phone number
+
+crypto:
+  # Arbitrage detection settings
+  scan_interval: 5 # seconds between scans
+  price_threshold: 100 # USD difference to trigger alert
+
+  # Trading pairs to monitor
+  pairs:
+    - "BTC/USDT"
+    - "ETH/USDT"
+    - "SOL/USDT"
+
+  # Exchange API keys (optional - only needed for trading)
+  exchanges:
+    binance:
+      api_key: ""
+      secret: ""
+    kraken:
+      api_key: ""
+      secret: ""
+    coinbase:
+      api_key: ""
+      secret: ""
+
+# General settings
+logging:
+  level: "INFO"
+  file: "logs/assistant.log"

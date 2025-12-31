@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  assistant:
+    build: .
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    volumes:
+      - ./memory_db:/app/memory_db
+      - ./models:/app/models
+      - ./logs:/app/logs
+      - ./config:/app/config
+    environment:
+      - RESEMBLE_API_KEY=${RESEMBLE_API_KEY}
+    restart: unless-stopped
+
+  jupyter:
+    image: jupyter/datascience-notebook:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./models:/home/jovyan/models
+    environment:
+      - JUPYTER_TOKEN=trinity123
+    restart: unless-stopped
+
+  cockpit:
+    image: cockpit/ws:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/machine-id:/etc/machine-id:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /:/host:ro
+    privileged: true
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  system_agent:
+    build: .
+    volumes:
+      - ./memory_db:/app/memory_db
+      - ./assistants:/app/assistants
+    command: python3 -m assistants.system_agent
+    restart: unless-stopped
+    depends_on:
+      - assistant
+
+volumes:
+  redis_data:
