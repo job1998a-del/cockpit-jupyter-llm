@@ -92,3 +92,32 @@ A **dedicated background agent** focused on **system awareness and orchestration
 3. **Self-learning & persistent**
 4. **VPS-friendly**
 5. **Composable & Docker-ready**
+
+---
+
+## 🧠🚀 “Almost Human” Ollama Upgrade
+
+This project now implements a modular cognitive stack for truly autonomous behavior:
+
+* **Goal Engine**: Agent decides its own objectives (answer, reflect, act).
+* **Internal Debate**: Multi-model reasoning (e.g., Phi-2 vs TinyLlama) to refine judgment.
+* **Ethics Framework**: Guardrails to ensure safe and honest interactions.
+* **Tool Decision Layer**: Decides when to use shell tools vs conversation.
+* **Timing Realism**: Realistic pauses based on punctuation for human-like voice.
+
+---
+
+## 🛠️ Stack Components
+
+* **Resemble.AI Client**: Modular client for high-quality speech.
+* **System Observer**: Background agent for VPS health monitoring.
+* **Ollama Core**: local-first LLM inference (`qwen2.5:7b`, `phi-2`, `tinyllama`).
+
+---
+
+## 🚀 Quick Start
+
+1. Install dependencies: `pip install -r requirements.txt`
+2. Configure secrets: `cp config/secrets.example.yaml config/secrets.yaml`
+3. Launch with Docker: `docker-compose up -d`
+4. Access Cockpit via `localhost:9090`

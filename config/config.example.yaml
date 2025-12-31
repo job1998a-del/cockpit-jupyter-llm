@@ -29,6 +29,10 @@ crypto:
       api_key: ""
       secret: ""
 
+# Ollama settings (for Almost Human upgrade)
+ollama:
+  url: "http://localhost:11434/api/generate"
+
 # General settings
 logging:
   level: "INFO"
