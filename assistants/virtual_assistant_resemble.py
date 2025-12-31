@@ -6,6 +6,7 @@ import aiohttp
 from datetime import datetime
 from typing import Dict, List, Optional
 from dataclasses import dataclass, asdict
+from config.settings import settings
 
 from api.resemble_api import ResembleAIClient
 from assistant.memory_manager import MemoryManager
@@ -39,26 +40,37 @@ class HumanLikeAgent:
     """
     
     def __init__(self, config_path: str = "config/config.yaml"):
-        self.config = self._load_config(config_path)
+        try:
+            self.config = self._load_config(config_path)
+        except:
+            self.config = {}
+            
         self.logger = self._setup_logging()
         
+        # Resemble Settings
+        resemble_key = self.config.get('resemble_ai', {}).get('api_key', settings.resemble_api_key)
+        resemble_url = self.config.get('resemble_ai', {}).get('cluster_url', "https://f.cluster.resemble.ai")
+        default_voice_uuid = self.config.get('resemble_ai', {}).get('default_voice', settings.resemble_default_voice)
+
         # Initialize Core Components
         self.resemble = ResembleAIClient(
-            api_key=self.config['resemble_ai']['api_key'],
-            cluster_url=self.config['resemble_ai'].get('cluster_url')
+            api_key=resemble_key,
+            cluster_url=resemble_url
         )
-        self.memory = MemoryManager(db_path=self.config['memory']['db_path'])
+        
+        db_path = self.config.get('memory', {}).get('db_path', "./memory_db")
+        self.memory = MemoryManager(db_path=db_path)
         self.emotion_engine = EmotionEngine()
         self.goal_engine = GoalEngine(self.ollama_query)
         self.tool_engine = ToolEngine(self.ollama_query)
         
         self.default_voice = VoiceSettings(
-            voice_uuid=self.config['resemble_ai'].get('default_voice'),
+            voice_uuid=default_voice_uuid,
             emotion="neutral"
         )
         
         self.conversation_states: Dict[str, ConversationState] = {}
-        self.ollama_url = self.config.get('ollama', {}).get('url', 'http://localhost:11434/api/generate')
+        self.ollama_url = self.config.get('ollama', {}).get('url', settings.ollama_base_url + "/api/generate")
 
     def _load_config(self, config_path: str) -> Dict:
         import yaml
@@ -118,7 +130,7 @@ class HumanLikeAgent:
         # 2. Internal Thought (System Context Awareness)
         system_context = self._get_system_context()
         thought_prompt = f"System Context: {system_context}\nGoal: {goal}\nUser Input: {user_input}\nThink silently."
-        thoughts = await self.ollama_query("qwen2.5:7b", thought_prompt)
+        thoughts = await self.ollama_query("qwen2.5:0.5b", thought_prompt)
 
         # 3. Internal Debate
         raw_response = await internal_debate(user_input, self.ollama_query)

@@ -95,23 +95,39 @@ A **dedicated background agent** focused on **system awareness and orchestration
 
 ---
 
-## 🧠🚀 “Almost Human” Ollama Upgrade
+## 🏗️ Technical Architecture
 
-This project now implements a modular cognitive stack for truly autonomous behavior:
+The project is built with a modular, factory-based architecture designed for production and easy scaling.
 
-* **Goal Engine**: Agent decides its own objectives (answer, reflect, act).
-* **Internal Debate**: Multi-model reasoning (e.g., Phi-2 vs TinyLlama) to refine judgment.
-* **Ethics Framework**: Guardrails to ensure safe and honest interactions.
-* **Tool Decision Layer**: Decides when to use shell tools vs conversation.
-* **Timing Realism**: Realistic pauses based on punctuation for human-like voice.
+### Core Stack
+
+* **FastAPI**: High-performance API layer with Pydantic validation.
+* **LangChain**: Open-source framework for agentic workflows and tool use.
+* **Ollama**: Local-first LLM inference (`qwen2.5`, `phi-2`, `tinyllama`).
+* **Resemble.AI**: Advanced voice synthesis and cloning.
+
+### Project Structure
+
+```
+cockpit-jupyter-llm-vps/
+├── api/              # FastAPI app, routes, and logic
+├── agents/           # Modular Agent implementations (LangChain, Ollama)
+├── assistant/        # Core cognitive modules (Ethics, Debate, Goals)
+├── config/           # Pydantic-settings and constants
+├── memory/           # Conversation and long-term storage
+├── scripts/          # Automation and setup scripts
+├── Dockerfile        # Production Docker build
+└── render.yaml       # Render deployment configuration
+```
 
 ---
 
 ## 🛠️ Stack Components
 
-* **Resemble.AI Client**: Modular client for high-quality speech.
-* **System Observer**: Background agent for VPS health monitoring.
-* **Ollama Core**: local-first LLM inference (`qwen2.5:7b`, `phi-2`, `tinyllama`).
+* **Unified Agent Factory**: Dynamically switch between standard LangChain tools and custom cognitive stacks.
+* **Enhanced Tools**: Integrated Shell, Web Search, and Crypto Price checks.
+* **"Almost Human" Swarm**: Multi-agent reasoning with internal debate and ethical filtering.
+* **Production Ready**: Optimized for Render, containing health checks and structured logging.
 
 ---
 

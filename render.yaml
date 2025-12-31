@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: cockpit-ai-agent
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    region: ohio
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: OLLAMA_BASE_URL
+        value: "http://host.docker.internal:11434"
+      - key: OLLAMA_MODEL
+        value: "qwen2.5:7b"
+      - key: LLM_PROVIDER
+        value: "ollama"
+      - key: ENABLE_LANGCHAIN
+        value: "true"
+      - key: DEBUG
+        value: "false"
+    healthCheckPath: /health
+    autoDeploy: true
+
+  - type: worker
+    name: agent-cognitive-worker
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    # For Docker, use dockerCommand instead of command for workers if needed
+    dockerCommand: python -m assistants.system_agent
+    envVars:
+      - key: WORKER_TYPE
+        value: "observer"

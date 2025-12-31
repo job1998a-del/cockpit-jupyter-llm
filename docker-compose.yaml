@@ -1,88 +1,42 @@
 version: '3.8'
 
 services:
-  assistant:
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11435:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+  api:
     build: .
     ports:
       - "8000:8000"
-      - "8001:8001"
-    volumes:
-      - ./memory_db:/app/memory_db
-      - ./models:/app/models
-      - ./logs:/app/logs
-      - ./config:/app/config
-    environment:
-      - RESEMBLE_API_KEY=${RESEMBLE_API_KEY}
-    restart: unless-stopped
-
-  jupyter:
-    image: jupyter/datascience-notebook:latest
-    ports:
-      - "8888:8888"
-    volumes:
-      - ./notebooks:/home/jovyan/work
-      - ./models:/home/jovyan/models
-    environment:
-      - JUPYTER_TOKEN=trinity123
-    restart: unless-stopped
-
-  cockpit:
-    image: cockpit/ws:latest
-    ports:
-      - "9090:9090"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/machine-id:/etc/machine-id:ro
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - /:/host:ro
-    privileged: true
-    restart: unless-stopped
-
-  redis:
-    image: redis:alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    restart: unless-stopped
-
-  system_agent:
-    build: .
-    volumes:
-      - ./memory_db:/app/memory_db
-      - ./assistants:/app/assistants
-    command: python3 -m assistants.system_agent
-    restart: unless-stopped
-    depends_on:
-      - assistant
-
-  agent-api:
-    build: .
-    ports:
-      - "8001:8000"
     volumes:
       - .:/app
     environment:
-      - OLLAMA_BASE_URL=http://host.docker.internal:11434
-    command: python3 -m api.agent_server
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - DEBUG=true
     restart: unless-stopped
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    depends_on:
+      - ollama
 
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
     ports:
-      - "3001:8080"
+      - "3002:8080"
     environment:
-      - OPENAI_API_BASE_URL=http://host.docker.internal:8001/v1
+      - OPENAI_API_BASE_URL=http://api:8000/api/chat
       - OPENAI_API_KEY=local-agent
-      - OLLAMA_BASE_URL=http://host.docker.internal:11434
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - OLLAMA_BASE_URL=http://ollama:11434
     volumes:
       - open-webui_data:/app/backend/data
     restart: unless-stopped
+    depends_on:
+      - api
+      - ollama
 
 volumes:
-  redis_data:
   open-webui_data:
+  ollama_data:

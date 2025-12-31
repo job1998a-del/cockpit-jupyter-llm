@@ -10,10 +10,10 @@ async def internal_debate(query, query_fn):
     logger.info("Initiating internal debate...")
     
     # Perspective A: Pro/Confirmation
-    pro = await query_fn("phi-2", f"Argue FOR responding positively or taking immediate action on: {query}")
+    pro = await query_fn("phi", f"Argue FOR responding positively or taking immediate action on: {query}")
     
     # Perspective B: Con/Caution
-    con = await query_fn("phi-2", f"Argue AGAINST or provide a cautionary perspective on: {query}")
+    con = await query_fn("phi", f"Argue AGAINST or provide a cautionary perspective on: {query}")
 
     # Synthesis: The final balanced decision
     synthesis_prompt = f"""
