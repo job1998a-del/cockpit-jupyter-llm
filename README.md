@@ -115,9 +115,44 @@ This project now implements a modular cognitive stack for truly autonomous behav
 
 ---
 
-## 🚀 Quick Start
+---
 
-1. Install dependencies: `pip install -r requirements.txt`
-2. Configure secrets: `cp config/secrets.example.yaml config/secrets.yaml`
-3. Launch with Docker: `docker-compose up -d`
-4. Access Cockpit via `localhost:9090`
+## 🌐 Web UI & Voice Interaction
+
+The project now includes **Open WebUI** for a premium browser-based experience.
+
+### Accessing the UI
+
+* **Open WebUI**: `http://localhost:3001`
+* **First Login**: Create a local account (all data stays on your machine).
+* **Model Selection**: Select `trinity-core-agent` from the dropdown.
+
+### 🎙️ Talking to Your Agent
+
+1. Click the **Microphone Icon** in the chat bar to enable browser-based Speech-to-Text.
+2. Go to **Settings > Audio** to enable Text-to-Speech (Output).
+3. For the best experience, choose "Browser Speech Engine" or plug in your local Piper/Whisper endpoints.
+
+### 🧠 How it Works
+
+We use a FastAPI middleware (`api/agent_server.py`) that acts as an OpenAI-compatible bridge. This allows Open WebUI to talk directly to our **Almost Human** cognitive stack instead of raw Ollama.
+
+---
+
+## 🚀 Quick Start (Web UI)
+
+1. **Pull Required Models**:
+
+   ```bash
+   ollama pull qwen2.5:7b
+   ollama pull phi-2
+   ollama pull tinyllama
+   ```
+
+2. **Start the Swarm**:
+
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Open the Dashboard**: Visit `http://localhost:3001`.

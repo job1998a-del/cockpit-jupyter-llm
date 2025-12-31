@@ -56,5 +56,33 @@ services:
     depends_on:
       - assistant
 
+  agent-api:
+    build: .
+    ports:
+      - "8001:8000"
+    volumes:
+      - .:/app
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    command: python3 -m api.agent_server
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    ports:
+      - "3001:8080"
+    environment:
+      - OPENAI_API_BASE_URL=http://host.docker.internal:8001/v1
+      - OPENAI_API_KEY=local-agent
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - open-webui_data:/app/backend/data
+    restart: unless-stopped
+
 volumes:
   redis_data:
+  open-webui_data:
